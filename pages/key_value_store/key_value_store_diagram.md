@@ -1,16 +1,16 @@
 ```mermaid
-graph TB
+flowchart TB
     subgraph DC1["Datacenter 1"]
-        subgraph "Load Balancer 1"
-            LB1[Load Balancer]
+        subgraph LB1["Load Balancer 1"]
+            LB1_Node[Load Balancer]
         end
 
-        subgraph "Application Layer 1"
+        subgraph AL1["Application Layer 1"]
             API1[API Server]
             Cache1[Cache Layer]
         end
 
-        subgraph "Storage Layer 1"
+        subgraph SL1["Storage Layer 1"]
             Master1[(Master Node)]
             Replica1_1[(Replica Node 1)]
             Replica1_2[(Replica Node 2)]
@@ -18,50 +18,50 @@ graph TB
     end
 
     subgraph DC2["Datacenter 2"]
-        subgraph "Load Balancer 2"
-            LB2[Load Balancer]
+        subgraph LB2["Load Balancer 2"]
+            LB2_Node[Load Balancer]
         end
 
-        subgraph "Application Layer 2"
+        subgraph AL2["Application Layer 2"]
             API2[API Server]
             Cache2[Cache Layer]
         end
 
-        subgraph "Storage Layer 2"
+        subgraph SL2["Storage Layer 2"]
             Master2[(Master Node)]
             Replica2_1[(Replica Node 1)]
             Replica2_2[(Replica Node 2)]
         end
     end
 
-    subgraph "Client Layer"
+    subgraph CL["Client Layer"]
         Client[Client Application]
     end
 
-    subgraph "Global Load Balancer"
-        GLB[Global Load Balancer]
+    subgraph GLB["Global Load Balancer"]
+        GLB_Node[Global Load Balancer]
     end
 
-    subgraph "Monitoring"
+    subgraph MON["Monitoring"]
         Monitor[Global Monitoring System]
     end
 
     %% Client to Global Load Balancer
-    Client --> GLB
+    Client --> GLB_Node
 
     %% Global Load Balancer to Datacenter Load Balancers
-    GLB --> LB1
-    GLB --> LB2
+    GLB_Node --> LB1_Node
+    GLB_Node --> LB2_Node
 
     %% Datacenter 1 connections
-    LB1 --> API1
+    LB1_Node --> API1
     API1 --> Cache1
     API1 --> Master1
     API1 --> Replica1_1
     API1 --> Replica1_2
 
     %% Datacenter 2 connections
-    LB2 --> API2
+    LB2_Node --> API2
     API2 --> Cache2
     API2 --> Master2
     API2 --> Replica2_1
@@ -90,7 +90,7 @@ graph TB
     classDef storage fill:#bfb,stroke:#333,stroke-width:2px,color:#000
     classDef monitoring fill:#fbb,stroke:#333,stroke-width:2px,color:#000
 
-    class Client,GLB primary
+    class Client,GLB_Node primary
     class API1,API2,Cache1,Cache2 secondary
     class Master1,Master2,Replica1_1,Replica1_2,Replica2_1,Replica2_2 storage
     class Monitor monitoring

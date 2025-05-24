@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Design Documentation</title>
+    <!-- Add Mermaid.js -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            securityLevel: 'loose',
+            flowchart: {
+                useMaxWidth: false,
+                htmlLabels: true
+            }
+        });
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .mermaid {
+            margin: 20px 0;
+            text-align: center;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        h1 {
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="content" id="content">
+        <!-- Content will be loaded here -->
+    </div>
+
+    <!-- Add script to load and render markdown files -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        // Configure marked to handle Mermaid diagrams
+        marked.setOptions({
+            breaks: true,
+            gfm: true
+        });
+
+        // Function to load and render markdown files
+        async function loadMarkdownFile() {
+            try {
+                // Get the markdown file path from the URL
+                const path = window.location.pathname;
+                const response = await fetch(path);
+                const text = await response.text();
+                
+                // Process the text to handle Mermaid diagrams
+                const processedText = text.replace(/```mermaid\n([\s\S]*?)```/g, 
+                    (match, p1) => `<div class="mermaid">${p1}</div>`
+                );
+                
+                // Render the markdown
+                const html = marked.parse(processedText);
+                document.getElementById('content').innerHTML = html;
+                
+                // Initialize Mermaid diagrams
+                mermaid.init(undefined, document.querySelectorAll('.mermaid'));
+            } catch (error) {
+                console.error('Error loading markdown file:', error);
+                document.getElementById('content').innerHTML = 'Error loading content';
+            }
+        }
+
+        // Load the content when the page loads
+        window.onload = loadMarkdownFile;
+    </script>
+</body>
+</html> 

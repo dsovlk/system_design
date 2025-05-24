@@ -4,6 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>System Design Documentation</title>
+    <!-- Add Mermaid.js -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            securityLevel: 'loose',
+            flowchart: {
+                useMaxWidth: false,
+                htmlLabels: true
+            }
+        });
+    </script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -46,6 +59,11 @@
             border-bottom: 2px solid #3498db;
             padding-bottom: 10px;
         }
+        /* Add styles for Mermaid diagrams */
+        .mermaid {
+            margin: 20px 0;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -86,5 +104,40 @@
             <p>For detailed deletion process explanation, see <a href="pages/key_value_store/key_value_store_write_path.md#deletion-process">Deletion Process Details</a>.</p>
         </section>
     </div>
+
+    <!-- Add script to load and render markdown files -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        // Function to load and render markdown files
+        async function loadMarkdownFile(url) {
+            try {
+                const response = await fetch(url);
+                const text = await response.text();
+                const html = marked.parse(text);
+                return html;
+            } catch (error) {
+                console.error('Error loading markdown file:', error);
+                return 'Error loading content';
+            }
+        }
+
+        // Function to initialize Mermaid after content is loaded
+        function initMermaid() {
+            mermaid.init(undefined, document.querySelectorAll('.mermaid'));
+        }
+
+        // Load and render markdown files when links are clicked
+        document.querySelectorAll('a[href$=".md"]').forEach(link => {
+            link.addEventListener('click', async (e) => {
+                e.preventDefault();
+                const url = link.href;
+                const content = await loadMarkdownFile(url);
+                const container = document.createElement('div');
+                container.innerHTML = content;
+                document.body.appendChild(container);
+                initMermaid();
+            });
+        });
+    </script>
 </body>
 </html> 
